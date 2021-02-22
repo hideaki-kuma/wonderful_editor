@@ -38,7 +38,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
+  # アソシエーション
   has_many :articles, dependent: :destroy
   has_many :article_likes, dependent: :destroy
   has_many :comments, dependent: :destroy
+
+  # バリデーション
+  validates :name, presence: true, uniqueness: true, length: { minimum: 4, maximum: 10 }
 end
