@@ -18,7 +18,14 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Article < ApplicationRecord
+
+  #アソシエーション
   belongs_to :user
   has_many :article_likes, dependent: :destroy
   has_many :comments, dependent: :destroy
+
+  #バリデーション
+  validates :title, presence: true
+  validates :body, presence: true
+
 end
