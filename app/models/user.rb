@@ -12,7 +12,7 @@
 #  email                  :string
 #  encrypted_password     :string           default(""), not null
 #  image                  :string
-#  name                   :string
+#  name                   :string           not null
 #  provider               :string           default("email"), not null
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
@@ -27,6 +27,7 @@
 #
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_name                  (name) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
@@ -38,7 +39,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
+  # アソシエーション
   has_many :articles, dependent: :destroy
   has_many :article_likes, dependent: :destroy
   has_many :comments, dependent: :destroy
+
+  # バリデーション
+  validates :name, presence: true,
+                   uniqueness: true, length: { in: 4..10 }
 end
