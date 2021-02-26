@@ -45,5 +45,6 @@ module WonderfulEditor
                        request_specs: true
     end
     config.api_only = true
+    # Task5-4にて追加
   end
 end
