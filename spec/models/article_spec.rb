@@ -20,9 +20,11 @@
 require "rails_helper"
 
 RSpec.describe Article, type: :model do
+  let(:user) { User.create!(name: "aaaa", email: "aaaa@example.com", password: "password") }
   context "title とbodyが入力されているとき" do
+    let(:article) { Article.new(title: "今日の課題", body: "取り組んだこと", user_id: user.id) }
+
     it "記事が作成される" do
-      article = Article.new(title: "今日の課題", body: "取り組んだこと")
       expect(article).to be_valid
     end
   end
