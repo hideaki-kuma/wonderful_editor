@@ -20,5 +20,10 @@
 require "rails_helper"
 
 RSpec.describe Article, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "title とbodyが入力されているとき" do
+    it "記事が作成される" do
+      article = Article.new(title: "今日の課題", body: "取り組んだこと")
+      expect(article).to be_valid
+    end
+  end
 end
