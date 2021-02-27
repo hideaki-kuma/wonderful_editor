@@ -73,6 +73,7 @@ RSpec.describe User, type: :model do
 
   context "すでに同じname が存在しているとき" do
     before { create(:user, name: "taro") }
+
     it "ユーザー作成に失敗する" do
       aggregate_failures do
         user = build(:user, name: "taro")
