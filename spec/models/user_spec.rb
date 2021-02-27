@@ -72,9 +72,9 @@ RSpec.describe User, type: :model do
   end
 
   context "すでに同じname が存在しているとき" do
+    before { create(:user, name: "taro") }
     it "ユーザー作成に失敗する" do
       aggregate_failures do
-        create(:user, name: "taro")
         user = build(:user, name: "taro")
         expect(user).to be_invalid
         expect(user.errors[:name]).to include("has already been taken")
