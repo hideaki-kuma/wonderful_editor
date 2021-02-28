@@ -33,17 +33,16 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   context "name を指定しているとき" do
-   let(:user) { build(:user) }
-   it "ユーザーが作られる" do
-    binding.pry
+    let(:user) { build(:user) }
+    it "ユーザーが作られる" do
       aggregate_failures do
         expect(user.valid?).to eq true
       end
-   end
+    end
   end
 
   context "name を指定していないとき" do
-    let(:user) {build(:user, name:nil)}
+    let(:user) { build(:user, name: nil) }
     it "ユーザー作成に失敗する" do
       aggregate_failures do
         expect(user).to be_invalid
@@ -53,10 +52,9 @@ RSpec.describe User, type: :model do
   end
 
   context "nameの文字数が３文字以下の場合" do
-    let(:user) { build(:user, name:"aaa")}
+    let(:user) { build(:user, name: "aaa") }
     it "ユーザー作成に失敗する" do
       aggregate_failures do
-        binding.pry
         expect(user).to be_invalid
         expect(user.errors[:name]).to include("is too short (minimum is 4 characters)")
       end
@@ -64,10 +62,9 @@ RSpec.describe User, type: :model do
   end
 
   context "nameの文字数11文字以上の場合" do
-    let(:user) { build(:user, name:"aaaaaaaaaaa")}
+    let(:user) { build(:user, name: "aaaaaaaaaaa") }
     it "ユーザー作成に失敗する" do
       aggregate_failures do
-        binding.pry
         expect(user).to be_invalid
         expect(user.errors[:name]).to include("is too long (maximum is 10 characters)")
       end
@@ -76,10 +73,10 @@ RSpec.describe User, type: :model do
 
   context "すでに同じname が存在しているとき" do
     before { create(:user, name: "taro") }
-    let(:user) { build(:user, name:"taro")}
-    fit "ユーザー作成に失敗する" do
+
+    let(:user) { build(:user, name: "taro") }
+    it "ユーザー作成に失敗する" do
       aggregate_failures do
-        binding.pry
         expect(user).to be_invalid
         expect(user.errors[:name]).to include("has already been taken")
       end
