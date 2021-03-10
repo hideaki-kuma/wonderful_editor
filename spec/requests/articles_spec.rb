@@ -24,6 +24,8 @@ RSpec.xdescribe "/articles", type: :request do
   }
 
   describe "GET /index" do
+    # 記事一覧が取得できる
+    # id タイトル 更新日の項目が取得できる
     it "renders a successful response" do
       Article.create! valid_attributes
       get articles_url
