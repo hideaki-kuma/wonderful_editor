@@ -4,8 +4,8 @@ module Api::V1
 
     # GET /articles
     def index
-      @articles = Article.all
-      render json: @articles
+      @articles = Article.all.order("updated_at DESC")
+      render json: @articles, each_serializer: Api::V1::ArticlePreviewSerializer
     end
 
     # GET /articles/1

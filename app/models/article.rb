@@ -19,7 +19,7 @@
 #
 class Article < ApplicationRecord
   # アソシエーション
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :article_likes, dependent: :destroy
   has_many :comments, dependent: :destroy
 
