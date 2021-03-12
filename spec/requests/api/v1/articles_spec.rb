@@ -12,7 +12,7 @@ require "rails_helper"
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.xdescribe "/articles", type: :request do
+RSpec.describe "/articles", type: :request do
   # Article. As you add validations to Article, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
@@ -26,10 +26,17 @@ RSpec.xdescribe "/articles", type: :request do
   describe "GET /index" do
     # 記事一覧が取得できる
     # id タイトル 更新日の項目が取得できる
-    it "renders a successful response" do
-      Article.create! valid_attributes
-      get articles_url
-      expect(response).to be_successful
+    subject { get(api_v1_articles_path) }
+
+    before { create_list(:article, 3) }
+
+    fit "記事一覧が取得できる" do
+      # binding.pry
+      subject
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
+      expect(res[0].keys).to eq ["id", "title", "updated_at"]
+      expect(response).to have_http_status(200)
     end
   end
 
