@@ -30,109 +30,110 @@ RSpec.describe "/articles", type: :request do
 
     before { create_list(:article, 3) }
 
-    fit "記事一覧が取得できる" do
-      # binding.pry
+    it "記事の一覧が取得できる" do
       subject
-      res = JSON.parse(response.body)
-      expect(res.length).to eq 3
-      expect(res[0].keys).to eq ["id", "title", "updated_at"]
-      expect(response).to have_http_status(200)
+      aggregate_failures "最後まで通過" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 3
+        expect(res[0].keys).to eq ["id", "title", "updated_at"]
+        expect(response).to have_http_status(:ok)
+      end
     end
-  end
 
-  describe "GET /show" do
-    it "renders a successful response" do
-      article = Article.create! valid_attributes
-      get article_url(article)
-      expect(response).to be_successful
+    describe "GET /show" do
+      it "renders a successful response" do
+        article = Article.create! valid_attributes
+        get article_url(article)
+        expect(response).to be_successful
+      end
     end
-  end
 
-  describe "GET /new" do
-    it "renders a successful response" do
-      get new_article_url
-      expect(response).to be_successful
+    describe "GET /new" do
+      it "renders a successful response" do
+        get new_article_url
+        expect(response).to be_successful
+      end
     end
-  end
 
-  describe "GET /edit" do
-    it "render a successful response" do
-      article = Article.create! valid_attributes
-      get edit_article_url(article)
-      expect(response).to be_successful
+    describe "GET /edit" do
+      it "render a successful response" do
+        article = Article.create! valid_attributes
+        get edit_article_url(article)
+        expect(response).to be_successful
+      end
     end
-  end
 
-  describe "POST /create" do
-    context "with valid parameters" do
-      it "creates a new Article" do
-        expect {
+    describe "POST /create" do
+      context "with valid parameters" do
+        it "creates a new Article" do
+          expect {
+            post articles_url, params: { article: valid_attributes }
+          }.to change { Article.count }.by(1)
+        end
+
+        it "redirects to the created article" do
           post articles_url, params: { article: valid_attributes }
-        }.to change { Article.count }.by(1)
+          expect(response).to redirect_to(article_url(Article.last))
+        end
       end
 
-      it "redirects to the created article" do
-        post articles_url, params: { article: valid_attributes }
-        expect(response).to redirect_to(article_url(Article.last))
-      end
-    end
+      context "with invalid parameters" do
+        it "does not create a new Article" do
+          expect {
+            post articles_url, params: { article: invalid_attributes }
+          }.to change { Article.count }.by(0)
+        end
 
-    context "with invalid parameters" do
-      it "does not create a new Article" do
-        expect {
+        it "renders a successful response (i.e. to display the 'new' template)" do
           post articles_url, params: { article: invalid_attributes }
-        }.to change { Article.count }.by(0)
-      end
-
-      it "renders a successful response (i.e. to display the 'new' template)" do
-        post articles_url, params: { article: invalid_attributes }
-        expect(response).to be_successful
-      end
-    end
-  end
-
-  describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested article" do
-        article = Article.create! valid_attributes
-        patch article_url(article), params: { article: new_attributes }
-        article.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "redirects to the article" do
-        article = Article.create! valid_attributes
-        patch article_url(article), params: { article: new_attributes }
-        article.reload
-        expect(response).to redirect_to(article_url(article))
+          expect(response).to be_successful
+        end
       end
     end
 
-    context "with invalid parameters" do
-      it "renders a successful response (i.e. to display the 'edit' template)" do
-        article = Article.create! valid_attributes
-        patch article_url(article), params: { article: invalid_attributes }
-        expect(response).to be_successful
+    describe "PATCH /update" do
+      context "with valid parameters" do
+        let(:new_attributes) {
+          skip("Add a hash of attributes valid for your model")
+        }
+
+        it "updates the requested article" do
+          article = Article.create! valid_attributes
+          patch article_url(article), params: { article: new_attributes }
+          article.reload
+          skip("Add assertions for updated state")
+        end
+
+        it "redirects to the article" do
+          article = Article.create! valid_attributes
+          patch article_url(article), params: { article: new_attributes }
+          article.reload
+          expect(response).to redirect_to(article_url(article))
+        end
+      end
+
+      context "with invalid parameters" do
+        it "renders a successful response (i.e. to display the 'edit' template)" do
+          article = Article.create! valid_attributes
+          patch article_url(article), params: { article: invalid_attributes }
+          expect(response).to be_successful
+        end
       end
     end
-  end
 
-  describe "DELETE /destroy" do
-    it "destroys the requested article" do
-      article = Article.create! valid_attributes
-      expect {
+    describe "DELETE /destroy" do
+      it "destroys the requested article" do
+        article = Article.create! valid_attributes
+        expect {
+          delete article_url(article)
+        }.to change { Article.count }.by(-1)
+      end
+
+      it "redirects to the articles list" do
+        article = Article.create! valid_attributes
         delete article_url(article)
-      }.to change { Article.count }.by(-1)
-    end
-
-    it "redirects to the articles list" do
-      article = Article.create! valid_attributes
-      delete article_url(article)
-      expect(response).to redirect_to(articles_url)
+        expect(response).to redirect_to(articles_url)
+      end
     end
   end
 end
