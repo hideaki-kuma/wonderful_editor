@@ -52,7 +52,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
       let(:article) { create(:article) }
       let(:article_id) { article.id }
 
-      fit "その記事を取得できる" do
+      it "その記事を取得できる" do
         subject
         res = JSON.parse(response.body)
         expect(response).to have_http_status(:ok)
