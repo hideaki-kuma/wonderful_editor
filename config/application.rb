@@ -47,5 +47,7 @@ module WonderfulEditor
     end
     config.api_only = true
     # Task5-4にて追加
+    config.middleware.use ActionDispatch::Flash
+    # Task7-5 にて追記
   end
 end
