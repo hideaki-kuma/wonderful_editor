@@ -10,7 +10,7 @@ module Api::V1
 
     # GET /articles/1
     def show
-      render json: @article, each_serializer: Api::V1::ArticleSerializer
+      render json: article, each_serializer: Api::V1::ArticleSerializer
     end
 
     # GET /articles/new
@@ -24,13 +24,8 @@ module Api::V1
 
     # POST /articles
     def create
-      @article = Article.new(article_params)
-
-      if @article.save
-        redirect_to @article, notice: "Article was successfully created."
-      else
-        render :new
-      end
+      article = current_user.articles.create!(article_params)
+      render json: article, each_serializer: Api::V1::ArticleSerializer
     end
 
     # PATCH/PUT /articles/1
@@ -57,6 +52,7 @@ module Api::V1
 
       # Only allow a trusted parameter "white list" through.
       def article_params
+        # params.permit(:title, :body)
         params.require(:article).permit(:title, :body)
       end
   end
